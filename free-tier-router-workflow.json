@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "v1/chat/completions",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "id": "webhook-1",
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const env = items[0].json;\nconst req = env.body || env;\nconst messages = req.messages || [{ role: 'user', content: 'hello' }];\nconst prompt = messages.map(m => m.content || '').join(' ');\nconst isLong = prompt.length > 500;\nconst model = isLong ? 'nous/meituan/longcat-2.5:free' : 'ag/gemini-3.8-flash';\n\nreturn [{\n  json: {\n    model,\n    messages,\n    temperature: req.temperature || 0.7,\n    stream: req.stream || false,\n    _routing: { length: prompt.length, chosenModel: model }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "id": "code-route",
+      "name": "Route by Complexity"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:20128/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "id": "http-gateway",
+      "name": "9Router API",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "openrouter-cred-1",
+          "name": "OpenRouter"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [900, 300],
+      "id": "respond-webhook",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Route by Complexity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Complexity": {
+      "main": [
+        [
+          {
+            "node": "9Router API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "9Router API": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
