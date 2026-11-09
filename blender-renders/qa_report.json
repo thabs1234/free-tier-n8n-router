@@ -1,0 +1,16 @@
+{
+  "status": "partial",
+  "outputs": [],
+  "checks": {
+    "all_six_rendered": false,
+    "resolution_correct": true
+  },
+  "errors": [
+    "hills_500ml_still: Error: Cannot apply constructive modifiers on curve. Convert curve to mesh in order to apply\n",
+    "hills_500ml_sparkling: Error: Cannot apply constructive modifiers on curve. Convert curve to mesh in order to apply\n",
+    "hills_750ml_still: Error: Cannot apply constructive modifiers on curve. Convert curve to mesh in order to apply\n",
+    "hills_750ml_sparkling: Error: Cannot apply constructive modifiers on curve. Convert curve to mesh in order to apply\n",
+    "hills_1L_still: Error: Cannot apply constructive modifiers on curve. Convert curve to mesh in order to apply\n",
+    "hills_1L_sparkling: Error: Cannot apply constructive modifiers on curve. Convert curve to mesh in order to apply\n"
+  ]
+}

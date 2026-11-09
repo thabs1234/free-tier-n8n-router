@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hills Artesian Spring Water - White Theme</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --secondary: #e74c3c;
+      --accent: #2c97de;
+      --light-bg: #f8f9fa;
+      --white: #ffffff;
+      --text-dark: #333333;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--white);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+    
+    /* Ensure all sections have white background */
+    section {
+      background-color: var(--white) !important;
+      padding: 4rem 2rem;
+    }
+    
+    /* Make sure no dark backgrounds leak through */
+    *,
+    *::before,
+    *::after {
+      background-color: var(--white) !important;
+      border-color: #e0e0e0 !important;
+    }
+    
+    /* Header/Navigation */
+    header {
+      background-color: var(--white) !important;
+      padding: 1rem 2rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4 rgba(0,0,0,0.05);
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .nav-links a {
+      color: var(--text-dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+    
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 2rem;
+    }
+    
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto 2rem;
+      color: #666;
+    }
+    
+    /* Sections */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #eee;
+      color: var(--primary);
+    }
+    
+    /* Why Hills */
+    .why-hills {
+      background: var(--light-bg);
+    }
+    
+    .why-hills .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .why-card {
+      padding: 1.5rem;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      background: var(--white);
+      transition: transform 0.3s;
+    }
+    
+    .why-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .why-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: var(--secondary);
+    }
+    
+    /* Products */
+    .products {
+      background: var(--white);
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .product-card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      background: var(--white);
+      transition: box-shadow 0.3s;
+    }
+    
+    .product-card:hover {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    
+    .product-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+    
+    .product-card p {
+      font-size: 0.875rem;
+      color: #666;
+      margin: 0.5rem 0;
+    }
+    
+    /* Pricing */
+    .pricing {
+      background: var(--light-bg);
+    }
+    
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+    
+    .pricing-table th,
+    .pricing-table td {
+      padding: 1rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    
+    .pricing-table th {
+      background: var(--white);
+      font-weight: 600;
+    }
+    
+    .pricing-table tr:nth-child(even) {
+      background: var(--white);
+    }
+    
+    /* Label */
+    .label {
+      padding: 2rem;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-top: 2rem;
+      background: var(--white);
+    }
+    
+    .label img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto 1rem;
+    }
+    
+    /* Trade Enquiry */
+    .trade-enquiry {
+      background: var(--white);
+      padding: 3rem 2rem;
+      margin-top: 2rem;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+    
+    .trade-enquiry h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+    
+    .enquiry-form {
+      max-width: 600px;
+      margin-top: 2rem;
+    }
+    
+    .enquiry-form .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .enquiry-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .enquiry-form input,
+    .enquiry-form select,
+    .enquiry-form textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+    
+    .enquiry-form button {
+      width: 100%;
+      padding: 0.875rem;
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .enquiry-form button:hover {
+      background: #1a7ab0;
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--primary);
+      color: var(--white);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+    
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 1 3 5 12 12 21 5 12 1"></polygon>
+        </svg>
+        Hills Artesian Spring
+      </a>
+      <ul class="nav-links">
+        <li><a href="#story">Story</a></li>
+        <li><a href="#why">Why Hills</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#label">Label</a></li>
+        <li><a href="#enquiry">Trade Enquiry</a></li>
+      </ul>
+    </div>
+  </header>
+  
+  <!-- Hero -->
+  <header class="hero">
+    <h1>Naturally Rare. Simply Pure.</h1>
+    <p>Hills Artesian Spring Water - Sourced from a natural aquifer beneath the volcanic rock formations of Malelane, Mpumalanga</p>
+  </header>
+  
+  <!-- Story -->
+  <section id="story" class="section">
+    <div class="section-title">Our Story</div>
+    <div class="container">
+      <p>Hills is more than bottled water. It is a story of nature, origin and provenance. Sourced from a natural aquifer beneath the volcanic rocks of Malelane, Hills offers a distinctive South African point of origin that can be brought directly to the table.</p>
+    </div>
+  </section>
+  
+  <!-- Why Hills -->
+  <section id="why" class="section why-hills">
+    <div class="section-title">Why Hills</div>
+    <div class="container">
+      <div class="grid">
+        <div class="why-card">
+          <h3>Natural Source</h3>
+          <p>Sourced from a natural aquifer, sitting undisturbed beneath the earth.</p>
+        </div>
+        <div class="why-card">
+          <h3>Volcanic Origin</h3>
+          <p>Associated with the volcanic rock formations of Malelane.</p>
+        </div>
+        <div class="why-card">
+          <h3>South African</h3>
+          <p>A locally sourced premium water with a distinctive sense of place.</p>
+        </div>
+        <div class="why-card">
+          <h3>Premium Presentation</h3>
+          <p>Designed to complement modern hospitality and retail environments.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Products -->
+  <section id="products" class="section products">
+    <div class="section-title">Our Products</div>
+    <div class="container">
+      <div class="products-grid">
+        <div class="product-card">
+          <h3>Hills Still 500ml</h3>
+          <p>pH 7.0 • Balanced mineral profile</p>
+        </div>
+        <div class="product-card">
+          <h3>Hills Still 750ml</h3>
+          <p>pH 7.0 • Everyday premium hydration</p>
+        </div>
+        <div class="product-card">
+          <h3>Hills Still 1L</h3>
+          <p>pH 7.0 • Clean and refreshing</p>
+        </div>
+        <div class="product-card">
+          <h3>Hills Sparkling 500ml</h3>
+          <p>pH 4.9 • Crisp and refreshing</p>
+        </div>
+        <div class="product-card">
+          <h3>Hills Sparkling 750ml</h3>
+          <p>pH 4.9 • Distinctive character</p>
+        </div>
+        <div class="product-card">
+          <h3>Hills Sparkling 1L</h3>
+          <p>pH 4.9 • Premium sparkling water</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Pricing -->
+  <section id="pricing" class="section pricing">
+    <div class="section-title">Trade Pricing</div>
+    <div class="container">
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Size</th>
+            <th>Still (R per case)</th>
+            <th>Sparkling (R per case)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>500ml</td>
+            <td>R230</td>
+            <td>R242</td>
+          </tr>
+          <tr>
+            <td>750ml</td>
+            <td>R274</td>
+            <td>R288</td>
+          </tr>
+          <tr>
+            <td>1L</td>
+            <td>R146</td>
+            <td>R156</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  
+  <!-- Label -->
+  <section id="label" class="section label">
+    <div class="section-title">Label & Nutrition</div>
+    <div class="container">
+      <img src="https://thabs1234.github.io/hills-artesian-spring/assets/story-bg.png" alt="Hills Label Front">
+      <div style="margin-top: 2rem;">
+        <h3>Front Label</h3>
+        <p>Artesian Spring Water - Naturally filtered over many years through mineral enriched layers of volcanic rock. Bottled at source: Serenity Mountain and Forest Lodge, Malelane 1320.</p>
+        
+        <h3>Back Label - 1 Litre</h3>
+        <p>Barcode: 6 009900 553047</p>
+        <p>pH: 4.9 | TDS: 50 mg/l | Calcium: 1.3 mg/l | Magnesium: 1.4 mg/l | Sodium: 5.0 mg/l | Potassium: 0.43 mg/l</p>
+        
+        <h3>Filtered Analysis (mg/l)</h3>
+        <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+          <tr>
+            <th>Analyte</th>
+            <th>Result</th>
+          </tr>
+          <tr>
+            <td>Calcium as Ca</td>
+            <td>1.3</td>
+          </tr>
+          <tr>
+            <td>Magnesium as Mg</td>
+            <td>1.4</td>
+          </tr>
+          <tr>
+            <td>Sodium as Na</td>
+            <td>5.0</td>
+          </tr>
+          <tr>
+            <td>Potassium as K</td>
+            <td>0.43</td>
+          </tr>
+          <tr>
+            <td>TDS</td>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>Chloride Cl</td>
+            <td><20</td>
+          </tr>
+          <tr>
+            <td>pH</td>
+            <td>4.9</td>
+          </tr>
+          <tr>
+            <td>Sulphate SO4</td>
+            <td><0.15</td>
+          </tr>
+          <tr>
+            <td>Alkalinity as CaCO3</td>
+            <td><20</td>
+          </tr>
+          <tr>
+            <td>Nitrate as N</td>
+            <td>0.02</td>
+          </tr>
+          <tr>
+            <td>Fluoride as F</td>
+            <td>0.1</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Trade Enquiry -->
+  <section id="enquiry" class="section trade-enquiry">
+    <div class="container">
+      <h2>Trade Enquiry</h2>
+      <p>Interested in supplying Hills Artesian Spring Water? Complete the form below and we'll respond within 2 business days.</p>
+      <form class="enquiry-form">
+        <div class="form-group">
+          <label>Company Name</label>
+          <input type="text" placeholder="Your company name">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label>Product Interest</label>
+          <select>
+            <option>Still 500ml</option>
+            <option>Still 750ml</option>
+            <option>Still 1L</option>
+            <option>Sparkling 500ml</option>
+            <option>Sparkling 750ml</option>
+            <option>Sparkling 1L</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Enquiry Type</label>
+          <select>
+            <option>Trade pricing request</option>
+            <option>Sample request</option>
+            <option>Distribution inquiry</option>
+            <other>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="3" placeholder="Tell us about your requirements..."></textarea>
+        </div>
+        <button type="submit">Send Enquiry</button>
+      </form>
+    </div>
+  </section>
+  
+  <footer>
+    <div class="footer-container">
+      <p>&copy; 2026 Hills Artesian Spring Water • Sourced from Malelane, Mpumalanga • <a href="#" style="color: #fff;">Privacy Policy</a></p>
+    </div>
+  </footer>
+</body>
+</html>

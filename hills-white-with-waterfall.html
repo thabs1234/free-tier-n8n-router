@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hills Artesian Spring - White Theme with Live Waterfall</title>
+  <style>
+    /* ======================================================================
+       1. PAGE & CANVAS LAYOUT
+       ====================================================================== */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #ffffff !important;
+      overflow-x: hidden;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Waterfall canvas – full‑screen, behind everything */
+    #waterfallCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ======================================================================
+       2. HEADER (fixed, white with subtle blur)
+       ====================================================================== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      color: #2c3e50;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #2c97de;
+    }
+
+    /* ======================================================================
+       3. CONTENT AREA (overlays the canvas)
+       ====================================================================== */
+    .content {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding-top: 80px;   /* space for fixed header */
+      padding-bottom: 4rem;
+    }
+
+    /* Ensure every section has a pure white background, never the canvas */
+    section {
+      background-color: #ffffff !important;
+      padding: 4rem 2rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #2c3e50;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #eee;
+    }
+
+    /* ======================================================================
+       4. HERO
+       ====================================================================== */
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      color: #2c3e50;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #666;
+      max-width: 800px;
+      margin: 0 auto 2rem;
+    }
+
+    /* ======================================================================
+       5. WHY HILLS CARDS
+       ====================================================================== */
+    .why-hills .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .why-card {
+      padding: 1.5rem;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      background: #fff;
+      transition: transform 0.3s;
+    }
+
+    .why-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .why-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #e74c3c;
+    }
+
+    /* ======================================================================
+       6. PRODUCTS GRID
+       ====================================================================== */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .product-card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      background: #fff;
+      transition: box-shadow 0.3s;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .product-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: #2c3e50;
+    }
+
+    .product-card p {
+      font-size: 0.875rem;
+      color: #666;
+      margin: 0.5rem 0;
+    }
+
+    /* ======================================================================
+       7. PRICING TABLE
+       ====================================================================== */
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+
+    .pricing-table th, .pricing-table td {
+      padding: 1rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .pricing-table th {
+      background: #fff;
+      font-weight: 600;
+    }
+
+    .pricing-table tr:nth-child(even) {
+      background: #fff;
+    }
+
+    /* ======================================================================
+       8. LABEL (with nutrition table)
+       ====================================================================== */
+    .label {
+      padding: 2rem;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-top: 2rem;
+      background: #fff;
+    }
+
+    .label img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto 1rem;
+    }
+
+    /* ======================================================================
+       9. TRADE ENQUIRY FORM
+       ====================================================================== */
+    .trade-enquiry {
+      background: #fff;
+      padding: 3rem 2rem;
+      margin-top: 2rem;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    .trade-enquiry h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #2c3e50;
+    }
+
+    .enquiry-form {
+      max-width: 600px;
+      margin-top: 2rem;
+    }
+
+    .enquiry-form .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .enquiry-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .enquiry-form input,
+    .enquiry-form select,
+    .enquiry-form textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+
+    .enquiry-form button {
+      width: 100%;
+      padding: 0.875rem;
+      background: #2c97de;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .enquiry-form button:hover {
+      background: #1a7ab0;
+    }
+
+    /* ======================================================================
+       10. FOOTER
+       ====================================================================== */
+    footer {
+      background: #2c3e50;
+      color: #fff;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================================================
+     WATERFALL CANVAS (layer 0 – always behind all content)
+     ====================================================================== -->
+  <canvas id="waterfallCanvas"></canvas>
+
+  <!-- ======================================================================
+     HEADER (layer 100 – fixed white bar)
+     ====================================================================== -->
+  <header>
+    <div class="nav-container">
+      <a href="#story" class="logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 1 3 5 12 12 21 5 12 1"></polygon>
+        </svg>
+        Hills Artesian Spring
+      </a>
+      <ul class="nav-links">
+        <li><a href="#story">Story</a></li>
+        <li><a href="#why">Why Hills</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#label">Label</a></li>
+        <li><a href="#enquiry">Trade Enquiry</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+     MAIN CONTENT (layer 1 – white sections above the canvas)
+     ====================================================================== -->
+  <div class="content">
+
+    <!-- HERO -->
+    <section id="hero" class="section hero">
+      <div class="container">
+        <h1>Naturally Rare. Simply Pure.</h1>
+        <p>Hills Artesian Spring Water - Sourced from a natural aquifer beneath the volcanic rock formations of Malelane, Mpumalanga</p>
+      </div>
+    </section>
+
+    <!-- STORY -->
+    <section id="story" class="section">
+      <div class="section-title">Story</div>
+      <div class="container">
+        <p>Hills is more than bottled water. It is a story of nature, origin and provenance. Sourced from a natural aquifer beneath the volcanic rocks of Malelane, Hills offers a distinctive South African point of origin that can be brought directly to the table.</p>
+      </div>
+    </section>
+
+    <!-- WHY HILLS -->
+    <section id="why" class="section why-hills">
+      <div class="section-title">Why Hills</div>
+      <div class="container">
+        <div class="grid">
+          <div class="why-card">
+            <h3>Natural Source</h3>
+            <p>Sourced from a natural aquifer, sitting undisturbed beneath the earth.</p>
+          </div>
+          <div class="why-card">
+            <h3>Volcanic Origin</h3>
+            <p>Associated with the volcanic rock formations of Malelane.</p>
+          </div>
+          <div class="why-card">
+            <h3>South African</h3>
+            <p>A locally sourced premium water with a distinctive sense of place.</p>
+          </div>
+          <div class="why-card">
+            <h3>Premium Presentation</h3>
+            <p>Designed to complement modern hospitality and retail environments.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="products" class="section products">
+      <div class="section-title">Products</div>
+      <div class="container">
+        <div class="products-grid">
+          <div class="product-card">
+            <h3>Hills Still 500ml</h3>
+            <p>pH 7.0 • Balanced mineral profile</p>
+          </div>
+          <div class="product-card">
+            <h3>Hills Still 750ml</h3>
+            <p>pH 7.0 • Everyday premium hydration</p>
+          </div>
+          <div class="product-card">
+            <h3>Hills Still 1L</h3>
+            <p>pH 7.0 • Clean and refreshing</p>
+          </div>
+          <div class="product-card">
+            <h3>Hills Sparkling 500ml</h3>
+            <p>pH 4.9 • Crisp and refreshing</p>
+          </div>
+          <div class="product-card">
+            <h3>Hills Sparkling 750ml</h3>
+            <p>pH 4.9 • Distinctive character</p>
+          </div>
+          <div class="product-card">
+            <h3>Hills Sparkling 1L</h3>
+            <p>pH 4.9 • Premium sparkling water</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="section pricing">
+      <div class="section-title">Pricing</div>
+      <div class="container">
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Still (R per case)</th>
+              <th>Sparkling (R per case)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>500ml</td>
+              <td>R230</td>
+              <td>R242</td>
+            </tr>
+            <tr>
+              <td>750ml</td>
+              <td>R274</td>
+              <td>R288</td>
+            </tr>
+            <tr>
+              <td>1L</td>
+              <td>R146</td>
+              <td>R156</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- LABEL & NUTRITION -->
+    <section id="label" class="section label">
+      <div class="section-title">Label & Nutrition</div>
+      <div class="container">
+        <img src="https://thabs1234.github.io/hills-artesian-spring/assets/story-bg.png" alt="Hills Label Front">
+        <div style="margin-top: 2rem;">
+          <h3>Front Label</h3>
+          <p>Artesian Spring Water - Naturally filtered over many years through mineral enriched layers of volcanic rock. Bottled at source: Serenity Mountain and Forest Lodge, Malelane 1320.</p>
+
+          <h3>Back Label - 1 Litre</h3>
+          <p>Barcode: 6 009900 553047</p>
+          <p>pH: 4.9 | TDS: 50 mg/l | Calcium: 1.3 mg/l | Magnesium: 1.4 mg/l | Sodium: 5.0 mg/l | Potassium: 0.43 mg/l</p>
+
+          <h3>Filtered Analysis (mg/l)</h3>
+          <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+            <tr><td>Calcium as Ca</td><td>1.3</td></tr>
+            <tr><td>Magnesium as Mg</td><td>1.4</td></tr>
+            <tr><td>Sodium as Na</td><td>5.0</td></tr>
+            <tr><td>Potassium as K</td><td>0.43</td></tr>
+            <tr><td>TDS</td><td>50</td></tr>
+            <tr><td>Chloride Cl</td><td><20</td></tr>
+            <tr><td>pH</td><td>4.9</td></tr>
+            <tr><td>Sulphate SO4</td><td><0.15</td></tr>
+            <tr><td>Alkalinity as CaCO3</td><td><20</td></tr>
+            <tr><td>Nitrate as N</td><td>0.02</td></tr>
+            <tr><td>Fluoride as F</td><td>0.1</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRADE ENQUIRY -->
+    <section id="enquiry" class="section trade-enquiry">
+      <div class="container">
+        <h2>Trade Enquiry</h2>
+        <p>Interested in supplying Hills Artesian Spring Water? Complete the form below and we'll respond within 2 business days.</p>
+        <form class="enquiry-form">
+          <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" placeholder="Your company name">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label>Product Interest</label>
+            <select>
+              <option>Still 500ml</option>
+              <option>Still 750ml</option>
+              <option>Still 1L</option>
+              <option>Sparkling 500ml</option>
+              <option>Sparkling 750ml</option>
+              <option>Sparkling 1L</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Enquiry Type</label>
+            <select>
+              <option>Trade pricing request</option>
+              <option>Sample request</option>
+              <option>Distribution inquiry</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea rows="3" placeholder="Tell us about your requirements..."></textarea>
+          </div>
+          <button type="submit">Send Enquiry</button>
+        </form>
+      </div>
+    </section>
+
+  </div> <!-- /.content -->
+
+  <!-- ======================================================================
+     FOOTER (layer 100 – dark footer)
+     ====================================================================== -->
+  <footer>
+    <div class="footer-container">
+      <p>&copy; 2026 Hills Artesian Spring Water • Sourced from Malelane, Mpumalanga • <a href="#" style="color: #fff;">Privacy Policy</a></p>
+    </div>
+  </footer>
+
+  <!-- ======================================================================
+     WATERFALL ANIMATION SCRIPT (layer 0 – runs under everything)
+     ====================================================================== -->
+  <script>
+    // Waterfall canvas – pure white guarantee
+    const canvas = document.getElementById('waterfallCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height * 0.3;
+        this.length = Math.random() * 10 + 5;
+        this.speed = Math.random() * 2 + 1;
+        this.width = Math.random() * 2 + 1;
+        this.opacity = Math.random() * 0.5 + 0.3;
+      }
+      update() { this.y += this.speed; if (this.y > canvas.height) this.reset(); }
+      draw() {
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + this.length, this.y);
+        ctx.lineWidth = this.width;
+        ctx.strokeStyle = `rgba(0, 100, 150, ${this.opacity})`;
+        ctx.stroke();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.floor((canvas.width * canvas.height) / 15000);
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+      initAnimation();
+    }
+
+    function initAnimation() {
+      if (animationId) cancelAnimationFrame(animationId);
+      animate();
+    }
+
+    function animate() {
+      // subtle gradient to keep overall background white
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, '#e0f7ff');
+      gradient.addColorStop(1, '#ffffff');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => { p.update(); p.draw(); });
+      particles = particles.filter(p => p.y < canvas.height + 100);
+      while (particles.length < 50) particles.push(new Particle());
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('load', initParticles);
+  </script>
+
+</body>
+</html>
